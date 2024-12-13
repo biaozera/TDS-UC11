@@ -1,6 +1,9 @@
 
 import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -152,7 +155,32 @@ public class listagemVIEW extends javax.swing.JFrame {
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
+    private void preencherTabela(String filtro){
+        ProdutosDAO dao = new ProdutosDAO();
+        boolean status = dao.conectar();
+        if(status == false){
+            JOptionPane.showMessageDialog(null, "erro de conexão");
+        }else{
+            List<ProdutosDTO> listagem = null;
+            
+            DefaultTableModel tblprod = (DefaultTableModel) listaProdutos.getModel();
+            listaProdutos.setRowSorter(new TableRowSorter(tblprod));
+            tblprod.setNumRows(0);
+            
+            for (ProdutosDTO f : listagem){
+                Object[] obj = new Object[]{
+                    f.getId(),
+                    f.getNome(),
+                    f.getValor(),
+                    f.getStatus(),
+                };
+                
+                tblprod.addRow(obj);
+                         
+            }
+        }
 
+    }
     /**
      * @param args the command line arguments
      */

@@ -26,7 +26,7 @@ public class ProdutosDAO {
     public boolean conectar() { /**conectar */
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cenaflix", "root", "Biabiammh$21");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/uc11?user=root&password=Biabiammh$21");
         if (conn != null) {
             System.out.println("Conexão bem-sucedida!");
             return true;
@@ -34,7 +34,7 @@ public class ProdutosDAO {
     } catch (ClassNotFoundException e) {
         System.out.println("Driver não encontrado: " + e.getMessage());
     } catch (SQLException e) {
-         e.printStackTrace(); /**e imprimir/mostrar erro especifico*/
+         e.printStackTrace(); 
         System.out.println("Erro ao conectar: " + e.getMessage());
     }
     return false;
@@ -57,7 +57,7 @@ public class ProdutosDAO {
     }
     
     public ArrayList<ProdutosDTO> listarProdutos(){
-        
+        ArrayList<ProdutosDTO> listagem = new ArrayList<>();
         return listagem;
     }
     
