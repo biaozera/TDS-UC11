@@ -143,17 +143,24 @@ public class cadastroVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_cadastroNomeActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        ProdutosDTO produto = new ProdutosDTO();
-        String nome = cadastroNome.getText();
-        String valor = cadastroValor.getText();
-        String status = "A Venda";
-        produto.setNome(nome);
-        produto.setValor(Integer.parseInt(valor));
-        produto.setStatus(status);
-        
-        ProdutosDAO produtodao = new ProdutosDAO();
-        produtodao.cadastrarProduto(produto);
-        JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso");
+    ProdutosDTO produtos = new ProdutosDTO();
+    String nome = cadastroNome.getText();
+    String valor = cadastroValor.getText();
+    String status = "A Venda";
+
+    produtos.setNome(nome);
+    produtos.setValor(Integer.parseInt(valor));
+    produtos.setStatus(status);
+
+    ProdutosDAO produtodao = new ProdutosDAO();
+
+    int resultado = produtodao.cadastrarProduto(produtos);
+    if (resultado > 0) {
+        JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
+    } else {
+        JOptionPane.showMessageDialog(null, "Erro ao cadastrar o produto.");
+    }
+
         
     }//GEN-LAST:event_btnCadastrarActionPerformed
 

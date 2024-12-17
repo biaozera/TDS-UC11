@@ -17,48 +17,57 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutosDAO {
-    
     private Connection conn;
+    private PreparedStatement prep;
+    private ResultSet resultset;
 
-    
-     public boolean conectar() {
+    public ProdutosDAO() {
+        conectar();
+    }
+
+    public boolean conectar() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/uc11?user=root&password=Biabiammh$21");
-            System.out.println("Conexão bem-sucedida!");
+            String url = "jdbc:mysql://localhost:3306/uc11?useSSL=false&allowPublicKeyRetrieval=true";
+            String usuario = "root";
+            String senha = "Biabiammh$21";
+
+            conn = DriverManager.getConnection(url, usuario, senha);
+            System.out.println("Conexão estabelecida com sucesso.");
             return true;
         } catch (ClassNotFoundException e) {
-            System.out.println("Driver não encontrado: " + e.getMessage());
+            System.out.println("Driver JDBC não encontrado: " + e.getMessage());
         } catch (SQLException e) {
-            System.out.println("Erro ao conectar: " + e.getMessage());
+            System.out.println("Erro ao conectar ao banco de dados: " + e.getMessage());
         }
         return false;
     }
-         public void desconectar() {
-        try {
-            if (conn != null && !conn.isClosed()) {
-                conn.close();
-                System.out.println("Conexão fechada com sucesso.");
-            }
-        } catch (SQLException e) {
-            System.out.println("Erro ao fechar a conexão: " + e.getMessage());
-        }
-    }
-         
-    public int cadastrarProduto (ProdutosDTO produto){
+
+    public int cadastrarProduto(ProdutosDTO produtos) {
         if (conn == null) {
             System.out.println("Erro: Conexão não inicializada.");
             return -1;
         }
 
-        String sql = "INSERT INTO produto (nome, valor) VALUES (?, ?)";
+        String sql = "INSERT INTO produtos (nome, valor) VALUES (?, ?)";
         try (PreparedStatement prep = conn.prepareStatement(sql)) {
-            prep.setString(1, produto.getNome());
-            prep.setInt(2, produto.getValor());
+            prep.setString(1, produtos.getNome());
+            prep.setInt(2, produtos.getValor());
             return prep.executeUpdate();
         } catch (SQLException ex) {
             System.out.println("Erro ao cadastrar produto: " + ex.getMessage());
             return ex.getErrorCode();
+        }
+    }
+
+    public void desconectar() {
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+                System.out.println("Conexão encerrada com sucesso.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao fechar conexão: " + e.getMessage());
         }
     }
     
@@ -69,7 +78,7 @@ public class ProdutosDAO {
             return listagem;
         }
 
-        String sql = "SELECT nome, valor FROM produto";
+        String sql = "SELECT nome, valor FROM produtos";
         try (PreparedStatement prep = conn.prepareStatement(sql);
              ResultSet resultset = prep.executeQuery()) {
 
