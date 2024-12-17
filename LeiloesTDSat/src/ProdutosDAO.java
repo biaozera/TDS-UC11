@@ -23,37 +23,45 @@ public class ProdutosDAO {
     ResultSet resultset;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
     
-    public boolean conectar() { /**conectar */
-    try {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/uc11?user=root&password=Biabiammh$21");
-        if (conn != null) {
+     public boolean conectar() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/uc11?user=root&password=Biabiammh$21");
             System.out.println("Conexão bem-sucedida!");
             return true;
+        } catch (ClassNotFoundException e) {
+            System.out.println("Driver não encontrado: " + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("Erro ao conectar: " + e.getMessage());
         }
-    } catch (ClassNotFoundException e) {
-        System.out.println("Driver não encontrado: " + e.getMessage());
-    } catch (SQLException e) {
-         e.printStackTrace(); 
-        System.out.println("Erro ao conectar: " + e.getMessage());
+        return false;
     }
-    return false;
-}
-    public int cadastrarProduto (ProdutosDTO produto){
-            int status;
+         public void desconectar() {
         try {
-            prep = conn.prepareStatement("INSERT INTO produto VALUES(?,?,?,?)");
-            prep.setInt(1,produto.getId());
-            prep.setString(2,produto.getNome());
-            prep.setInt(3,produto.getValor());
-            prep.setString(4,produto.getStatus());
-            status = prep.executeUpdate();
-            return status; 
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+                System.out.println("Conexão fechada com sucesso.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao fechar a conexão: " + e.getMessage());
+        }
+    }
+         
+    public int cadastrarProduto (ProdutosDTO produto){
+        if (conn == null) {
+            System.out.println("Erro: Conexão não inicializada. Chame o método conectar() primeiro.");
+            return -1;
+        }
+
+        String sql = "INSERT INTO produto (nome, valor) VALUES (?, ?)";
+        try (PreparedStatement prep = conn.prepareStatement(sql)) {
+            prep.setString(1, produto.getNome());
+            prep.setInt(2, produto.getValor());
+            return prep.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println("Erro ao conectar: " + ex.getMessage());
+            System.out.println("Erro ao cadastrar produto: " + ex.getMessage());
             return ex.getErrorCode();
         }
-        
     }
     
     public ArrayList<ProdutosDTO> listarProdutos(){
