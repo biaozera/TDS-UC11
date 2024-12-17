@@ -18,10 +18,8 @@ import java.util.List;
 
 public class ProdutosDAO {
     
-    Connection conn;
-    PreparedStatement prep;
-    ResultSet resultset;
-    ArrayList<ProdutosDTO> listagem = new ArrayList<>();
+    private Connection conn;
+
     
      public boolean conectar() {
         try {
@@ -49,7 +47,7 @@ public class ProdutosDAO {
          
     public int cadastrarProduto (ProdutosDTO produto){
         if (conn == null) {
-            System.out.println("Erro: Conexão não inicializada. Chame o método conectar() primeiro.");
+            System.out.println("Erro: Conexão não inicializada.");
             return -1;
         }
 
@@ -64,13 +62,33 @@ public class ProdutosDAO {
         }
     }
     
-    public ArrayList<ProdutosDTO> listarProdutos(){
+      public ArrayList<ProdutosDTO> listarProdutos() {
         ArrayList<ProdutosDTO> listagem = new ArrayList<>();
+        if (conn == null) {
+            System.out.println("Erro: Conexão não inicializada. ");
+            return listagem;
+        }
+
+        String sql = "SELECT nome, valor FROM produto";
+        try (PreparedStatement prep = conn.prepareStatement(sql);
+             ResultSet resultset = prep.executeQuery()) {
+
+            while (resultset.next()) {
+                ProdutosDTO produto = new ProdutosDTO();
+                produto.setNome(resultset.getString("nome"));
+                produto.setValor(resultset.getInt("valor"));
+                listagem.add(produto);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Erro ao listar produtos: " + ex.getMessage());
+        }
+
         return listagem;
     }
+}
     
     
     
         
-}
+
 
