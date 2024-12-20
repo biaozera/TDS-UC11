@@ -94,6 +94,11 @@ public class ProdutosDAO {
 
         return listagem;
     }
+      public void venderProduto(ProdutosDTO p) throws SQLException{
+        String sql = "UPDATE produtos SET status = ? WHERE id = ?";
+        prep.setString(1, "Vendido");
+        prep.setInt(2, p.getId());
+      }
 }
     
     
