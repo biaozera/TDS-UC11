@@ -112,7 +112,10 @@ public ArrayList<ProdutosDTO> listarProdutosVendidos() throws SQLException {
     return listavendidos;
 
 }
-    
+
+    void venderProduto(String id) {
+    String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
+    }
 }
 
     
