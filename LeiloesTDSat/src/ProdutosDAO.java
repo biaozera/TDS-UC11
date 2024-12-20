@@ -99,7 +99,22 @@ public class ProdutosDAO {
         prep.setString(1, "Vendido");
         prep.setInt(2, p.getId());
       }
+      
+public ArrayList<ProdutosDTO> listarProdutosVendidos() throws SQLException {
+    ArrayList<ProdutosDTO> listavendidos = new ArrayList<>();
+    String sql = "SELECT id, nome, valor, status FROM produtos WHERE status = Vendido";
+     ProdutosDTO produto = new ProdutosDTO();
+    produto.setId(resultset.getInt("id"));
+    produto.setNome(resultset.getString("nome"));
+    produto.setValor(resultset.getInt("valor"));
+    produto.setStatus(resultset.getString("status"));
+    listavendidos.add(produto);
+    return listavendidos;
+
 }
+    
+}
+
     
     
     
